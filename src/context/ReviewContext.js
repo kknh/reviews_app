@@ -1,24 +1,28 @@
-import React, { useState, createContext } from 'react'
-import data from '../data/data'
+import React, { createContext, useReducer } from 'react'
+//import data from '../data/data'
+import reviewReducer from './reviewReducer'
+import { initialState } from './reviewReducer'
 const ReviewContext = createContext()
 export function ReviewContextProvider({ children }) {
-	const [reviews, setReviews] = useState(data)
-	const [index, setIndex] = useState(0)
+	const [state, dispatch] = useReducer(reviewReducer, initialState)
+
+	//const [reviews, setReviews] = useState(data)
+	//const [index, setIndex] = useState(0)
+
 	const increment = () => {
-		index < reviews.length - 1 ? setIndex((prev) => prev + 1) : setIndex(0)
+		dispatch({ type: 'INCREMENT' })
 	}
 	const decrement = () => {
-		index > 0 ? setIndex((prev) => prev - 1) : setIndex(reviews.length - 1)
+		dispatch({ type: 'DECREMENT' })
 	}
 	const random = () => {
-		const randomIndex = Math.floor(Math.random() * reviews.length)
-		setIndex(randomIndex)
+		dispatch({ type: 'RANDOM' })
 	}
 	return (
 		<ReviewContext.Provider
 			value={{
-				reviews,
-				index,
+				reviews: state.reviews,
+				index: state.index,
 				random,
 				increment,
 				decrement,
